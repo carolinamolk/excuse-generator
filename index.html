@@ -34,6 +34,18 @@
                     placeholder="What event do you need to avoid?"
                     maxlength="100"
                 >
+                <select id="categorySelect" class="category-select">
+                    <option value="" selected>Choose a category</option>
+                    <option value="random">You choose for me</option>
+                    <option value="priorCommitments">Prior Commitments</option>
+                    <option value="health">Doctor's orders (allegedly)</option>
+                    <option value="professional">Work "emergencies"</option>
+                    <option value="transportation">Transportation breakdown</option>
+                    <option value="family">Family Matters</option>
+                </select>
+                <div id="decisionFatigueMessage" class="decision-fatigue-message hidden">
+                    <span id="messageText"></span>
+                </div>
                 <button id="generateBtn" class="generate-btn">What's my excuse?</button>
             </section>
 
@@ -57,7 +69,10 @@
     <footer class="footer">
         <div class="footer-content">
             <p class="disclaimer">
-                Not responsible for actual social obligations, hurt feelings, or the consequences of using our suggestions in real life. Use at your own risk!
+                Not responsible for actual social obligations, hurt feelings, or the consequences of using our suggestions in real life. Proceed with caution and main character energy.
+            </p>
+            <p class="tagline-footer">
+                The Professional Excuse Generator - An Introvert's Holy Grail
             </p>
         </div>
     </footer>

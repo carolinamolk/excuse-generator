@@ -1,6 +1,6 @@
 # excuse-generator
 
-A humorous web application that generates ridiculously absurd excuses for any event you want to avoid. Perfect for those moments when you need a creative (and completely unbelievable) way out of social obligations.
+A humorous web application that generates ridiculously absurd excuses for any event you want to avoid. Perfect for those moments when you need a creative way out of social obligations.
 
 ## Features
 
