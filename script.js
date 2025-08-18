@@ -21,7 +21,8 @@ const excuses = {
     "I'm committed to a very important seminar on the psychology of doorknobs",
     "I have to attend my houseplant's therapy session for abandonment issues",
     "I'm participating in a 48-hour marathon of watching elevators go up and down",
-    "I promised to help my neighbor's cat write its autobiography"
+    "I promised to help my neighbor's cat write its autobiography",
+    "I'm busy guiding moths to the light"
   ],
   
   health: [
