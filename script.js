@@ -188,9 +188,20 @@ function generateExcuse() {
   // Get selected category from dropdown
   const selectedCategory = categorySelect.value;
   
+  // Check if a category is selected
+  if (!selectedCategory || selectedCategory === '') {
+    // Show validation message
+    categorySelect.style.borderColor = 'red';
+    categorySelect.focus();
+    return;
+  }
+  
+  // Reset border color if valid
+  categorySelect.style.borderColor = 'var(--border-color)';
+  
   let category;
-  if (selectedCategory === 'random' || selectedCategory === '') {
-    // Select random category if "You choose for me" or no selection
+  if (selectedCategory === 'random') {
+    // Select random category if "You choose for me"
     const categories = Object.keys(excuses);
     category = categories[Math.floor(Math.random() * categories.length)];
   } else {
@@ -419,6 +430,21 @@ eventInput.addEventListener('keypress', (e) => {
     generateExcuse();
     clearInput();
   }
+});
+
+// Reset screen when user starts typing new event
+eventInput.addEventListener('input', () => {
+  // Hide output section
+  outputSection.classList.add('hidden');
+  // Reset category dropdown
+  categorySelect.value = '';
+  // Hide decision fatigue message
+  decisionFatigueMessage.classList.add('hidden');
+  messageText.innerHTML = '';
+  // Reset button text
+  generateBtn.textContent = 'What\'s my excuse?';
+  // Reset category border color
+  categorySelect.style.borderColor = 'var(--border-color)';
 });
 
 // Copy button click
