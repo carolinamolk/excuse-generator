@@ -185,30 +185,12 @@ const messageText = document.getElementById('messageText');
  * Selects random category and random excuse from that category
  */
 function generateExcuse() {
-  // Check if event input is filled
-  if (!eventInput.value.trim()) {
-    // Show validation message
-    eventInput.style.borderColor = 'red';
-    eventInput.focus();
+  // Button is disabled if requirements aren't met, but double-check
+  if (!eventInput.value.trim() || !categorySelect.value) {
     return;
   }
   
-  // Reset event input border color if valid
-  eventInput.style.borderColor = 'var(--border-color)';
-  
-  // Get selected category from dropdown
   const selectedCategory = categorySelect.value;
-  
-  // Check if a category is selected
-  if (!selectedCategory || selectedCategory === '') {
-    // Show validation message
-    categorySelect.style.borderColor = 'red';
-    categorySelect.focus();
-    return;
-  }
-  
-  // Reset border color if valid
-  categorySelect.style.borderColor = 'var(--border-color)';
   
   let category;
   if (selectedCategory === 'random') {
@@ -232,6 +214,9 @@ function generateExcuse() {
   
   // Show copy/regenerate buttons
   showOutputSection();
+  
+  // Mark that we've generated for this event
+  hasGeneratedForCurrentEvent = true;
 }
 
 /**
@@ -432,31 +417,58 @@ function focusInput() {
 // Generate button click
 generateBtn.addEventListener('click', () => {
   generateExcuse();
-  clearInput();
+  // Don't clear input - let user try different categories
 });
 
 // Enter key in input field
 eventInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
-    generateExcuse();
-    clearInput();
+    // If category is not selected, focus on it
+    if (!categorySelect.value) {
+      e.preventDefault();
+      categorySelect.focus();
+    } else {
+      // Generate excuse if both fields are filled
+      generateExcuse();
+      // Don't clear input - let user try different categories
+    }
   }
 });
 
+// Function to check if button should be enabled
+function updateButtonState() {
+  const hasEvent = eventInput.value.trim();
+  const hasCategory = categorySelect.value;
+  
+  if (hasEvent && hasCategory) {
+    generateBtn.disabled = false;
+  } else {
+    generateBtn.disabled = true;
+  }
+}
+
+// Variable to track if we have generated an excuse for this event
+let hasGeneratedForCurrentEvent = false;
+
 // Reset screen when user starts typing new event
 eventInput.addEventListener('input', () => {
-  // Hide output section
-  outputSection.classList.add('hidden');
-  // Reset category dropdown
-  categorySelect.value = '';
-  // Hide decision fatigue message
-  decisionFatigueMessage.classList.add('hidden');
-  messageText.innerHTML = '';
-  // Reset button text
-  generateBtn.textContent = 'What\'s my excuse?';
-  // Reset border colors
-  categorySelect.style.borderColor = 'var(--border-color)';
-  eventInput.style.borderColor = 'var(--border-color)';
+  // If we've generated an excuse and user starts typing something different
+  if (hasGeneratedForCurrentEvent) {
+    // Hide output section
+    outputSection.classList.add('hidden');
+    // Reset category dropdown
+    categorySelect.value = '';
+    // Hide decision fatigue message
+    decisionFatigueMessage.classList.add('hidden');
+    messageText.innerHTML = '';
+    // Reset button text
+    generateBtn.textContent = 'What\'s my excuse?';
+    // Reset flag
+    hasGeneratedForCurrentEvent = false;
+  }
+  
+  // Update button state
+  updateButtonState();
 });
 
 // Copy button click
@@ -466,7 +478,49 @@ copyBtn.addEventListener('click', copyToClipboard);
 darkModeToggle.addEventListener('click', toggleDarkMode);
 
 // Category dropdown change
-categorySelect.addEventListener('change', handleCategoryChange);
+categorySelect.addEventListener('change', () => {
+  handleCategoryChange();
+  updateButtonState();
+});
+
+// Keyboard navigation for dropdown
+categorySelect.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    // If dropdown is open and category selected, generate excuse
+    if (categorySelect.value && eventInput.value.trim()) {
+      generateExcuse();
+    }
+  }
+  // Arrow keys are handled natively by the select element
+});
+
+// Global keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  // Cmd/Ctrl + Enter to generate excuse from anywhere
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+    e.preventDefault();
+    if (eventInput.value.trim() && categorySelect.value) {
+      generateExcuse();
+    }
+  }
+  
+  // Tab navigation is handled by default browser behavior
+  
+  // Escape key to reset
+  if (e.key === 'Escape') {
+    // Reset all fields
+    eventInput.value = '';
+    categorySelect.value = '';
+    outputSection.classList.add('hidden');
+    decisionFatigueMessage.classList.add('hidden');
+    messageText.innerHTML = '';
+    generateBtn.textContent = 'What\'s my excuse?';
+    hasGeneratedForCurrentEvent = false;
+    updateButtonState();
+    eventInput.focus();
+  }
+});
 
 // ===== INITIALIZATION =====
 
@@ -474,6 +528,7 @@ categorySelect.addEventListener('change', handleCategoryChange);
 document.addEventListener('DOMContentLoaded', () => {
   initializeDarkMode();
   focusInput(); // Focus input for immediate use
+  updateButtonState(); // Set initial button state
 });
 
 // ===== UTILITY FUNCTIONS =====

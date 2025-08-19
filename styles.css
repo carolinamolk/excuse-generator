@@ -247,7 +247,14 @@ body {
   box-shadow: var(--shadow);
 }
 
-.generate-btn:hover {
+.generate-btn:disabled {
+  background: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
+}
+
+.generate-btn:hover:not(:disabled) {
   background: var(--accent-hover);
   box-shadow: var(--shadow-hover);
   transform: translateY(-1px);
