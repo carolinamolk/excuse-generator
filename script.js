@@ -185,6 +185,17 @@ const messageText = document.getElementById('messageText');
  * Selects random category and random excuse from that category
  */
 function generateExcuse() {
+  // Check if event input is filled
+  if (!eventInput.value.trim()) {
+    // Show validation message
+    eventInput.style.borderColor = 'red';
+    eventInput.focus();
+    return;
+  }
+  
+  // Reset event input border color if valid
+  eventInput.style.borderColor = 'var(--border-color)';
+  
   // Get selected category from dropdown
   const selectedCategory = categorySelect.value;
   
@@ -443,8 +454,9 @@ eventInput.addEventListener('input', () => {
   messageText.innerHTML = '';
   // Reset button text
   generateBtn.textContent = 'What\'s my excuse?';
-  // Reset category border color
+  // Reset border colors
   categorySelect.style.borderColor = 'var(--border-color)';
+  eventInput.style.borderColor = 'var(--border-color)';
 });
 
 // Copy button click
